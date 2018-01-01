@@ -1,0 +1,19 @@
+ <td> <input type='text' name='columnList[" + i + "].comments' value='${column.comments}' maxlength='200' class='required' style='width:100px;'/></td>
+ <td nowrap> <input type='hidden' name='columnList[" + i + "].jdbcType' value=''/> </td>
+ <td> <select name='columnList[" + i + "].javaType' class='required input-mini' style='width:85px;*width:75px'> <c:forEach items='${config.javaTypeList}' var='dict'>
+ <option value='${dict.value}'  title='${dict.description}'>${dict.label}</option> </c:forEach> </select> </td>
+
+ <td><input type='text' name='columnList[" + i + "].javaField' value='${column.javaField}' maxlength='200' class='required input-small'/></td>
+ <td><input type='checkbox' name='columnList[" + i + "].isPk' value='1' /></td>
+ <td><input type='checkbox' name='columnList[" + i + "].isNull' value='1' /> </td>
+ <td> <input type='checkbox' name='columnList[" + i + "].isInsert' value='1' /> </td>
+ <td> <input type='checkbox' name='columnList[" + i + "].isEdit' value='1' /></td>
+ <td> <input type='checkbox' name='columnList[" + i + "].isList' value='1' /></td>
+ <td><input type='checkbox' name='columnList[" + i + "].isQuery' value='1' /></td>
+ 
+ <td><select name='columnList[" + i + "].queryType' class='required input-mini'> <c:forEach items='${config.queryTypeList}' var='dict'>
+ <option value='${fns:escapeHtml(dict.value)}' title='${dict.description}'>${fns:escapeHtml(dict.label)}</option></c:forEach> </select> </td>
+<td> <select name='columnList[" + i + "].showType' class='required' style='width:100px;'> <c:forEach items='${config.showTypeList}' var='dict'>
+ <option value='${dict.value}'  title='${dict.description}'>${dict.label}</option></c:forEach> </select></td>
+<td> <input type='text' name='columnList[" + i + "].dictType'  value='' maxlength='200' class='input-mini'/> </td>
+<td><input type='text' name='columnList[" + i + "].sort' value='' maxlength='200' class='required input-min digits'/> </td>

@@ -21,6 +21,21 @@
                     bottomText: "导入文件不能超过5M，仅允许导入“xls”或“xlsx”格式文件！"
                 });
             });
+
+
+            $("#checkedAll").click(function () {
+                if ($(this).attr("checked") == 'checked') { // 全选
+                    $("input[name='checkbox_name']").each(function () {
+                        $(this).attr("checked",true);
+                    });
+                } else { // 取消全选
+                    $("input[name='checkbox_name']").each(function () {
+                        $(this).attr("checked", false);
+                    });
+                }
+            });
+
+
         });
         function page(n, s) {
             if (n) $("#pageNo").val(n);
@@ -29,6 +44,8 @@
             $("#searchForm").submit();
             return false;
         }
+
+
     </script>
 </head>
 <body>
@@ -76,6 +93,7 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
     <tr>
+        <th><input type="checkbox" id="checkedAll"/></th>
         <th>归属公司</th>
         <th>归属部门</th>
         <th class="sort-column login_name">登录名</th>
@@ -89,6 +107,10 @@
     <tbody>
     <c:forEach items="${page.list}" var="user">
         <tr>
+            <td><input type="checkbox" name="checkbox_name"/>
+                <input type="text" style="display: none" id="userid"
+                       value="${user.id}"/>
+            </td>
             <td>${user.company.name}</td>
             <td>${user.office.name}</td>
             <td><a href="${ctx}/sys/user/form?id=${user.id}">${user.loginName}</a></td>
