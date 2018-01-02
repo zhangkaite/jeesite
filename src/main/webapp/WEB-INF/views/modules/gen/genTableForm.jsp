@@ -50,6 +50,7 @@
                    // columnList[${vs.index}].delFlag
                     $("input[name='columnList["+i+"].delFlag']").val(1);
                     $(this).parent().parent().hide();
+                    i++;
                 }
             });
 
