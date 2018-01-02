@@ -43,9 +43,12 @@
 
 
         function delSelectTr() {
+            var i=0;
             $("input[name*='checkbox_name']").each(function () {
 
                 if ($(this).attr("checked") == 'checked') {
+                   // columnList[${vs.index}].delFlag
+                    $("input[name='columnList["+i+"].delFlag']").val(1);
                     $(this).parent().parent().hide();
                 }
             });
