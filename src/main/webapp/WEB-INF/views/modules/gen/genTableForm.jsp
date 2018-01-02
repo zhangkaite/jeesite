@@ -45,13 +45,13 @@
         function delSelectTr() {
             var i=0;
             $("input[name*='checkbox_name']").each(function () {
-
                 if ($(this).attr("checked") == 'checked') {
                    // columnList[${vs.index}].delFlag
                     $("input[name='columnList["+i+"].delFlag']").val(1);
                     $(this).parent().parent().hide();
-                    i++;
+                    //$(this).parent().parent().remove();
                 }
+                i++;
             });
 
         }
@@ -66,7 +66,7 @@
 
             var str = "<tr><td> <input type='checkbox' name='checkbox_name[" + i + "]'/> </td>";
             str = str + "<td nowrap><input type='hidden' name='columnList[" + i + "].id' value=''/>" +
-                    "<input type='hidden' name='columnList[" + i + "].delFlag'  value=''/>" +
+                    "<input type='hidden' name='columnList[" + i + "].delFlag'  value='0'/>" +
                     "<input type='hidden' name='columnList[" + i + "].genTable.id' value='" + genTableId + "'/>" +
                     " <input type='text' name='columnList[" + i + "].name' value='' class='required' style='width:100px;'/></td>";
             str = str + "<td> <input type='text' name='columnList[" + i +
@@ -91,6 +91,7 @@
             str = str + "<td><input type='text' name='columnList[" + i + "].sort' value='' maxlength='200' class='required input-min digits'/> </td>";
             str = str +"</tr>";
             $("#tableForm").append(str);
+            $("select").select2();
 
         }
     </script>
@@ -105,7 +106,7 @@
 </ul>
 <c:choose>
     <c:when test="${empty genTable.name}">
-        <form:form id="inputForm" modelAttribute="genTable" action="${ctx}/gen/genTable/form" method="post"
+        <form:form id="inputForm" modelAttribute="genTable" action="${ctx}/gen/genTable/showTableInfo" method="post"
                    class="form-horizontal">
             <form:hidden path="id"/>
             <sys:message content="${message}"/>
@@ -205,7 +206,7 @@
                         </thead>
                         <tbody id="tableForm">
                         <c:forEach items="${genTable.columnList}" var="column" varStatus="vs">
-                            <tr${column.delFlag eq '1'?' class="error" title="已删除的列，保存之后消失！"':''}>
+                            <tr <c:if test="${column.delFlag =='1'}"> style="display: none" </c:if>>
                                 <td>
                                     <input type="checkbox" name="checkbox_name[${vs.index}]"/>
                                 </td>
@@ -290,6 +291,7 @@
                                            maxlength="200" class="required input-min digits"/>
                                 </td>
                             </tr>
+
                         </c:forEach>
                         </tbody>
                     </table>

@@ -15,7 +15,7 @@
 			<include refid="genTableColumns"/>
 		FROM gen_table a
 		<include refid="genTableJoins"/>
-		WHERE a.id = #{id}
+		WHERE a.id = #{id} or a.name=#{id}
 	</select>
 	
 	<select id="findList" resultType="GenTable">

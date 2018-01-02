@@ -42,6 +42,13 @@ public class GenTableService extends BaseService {
 		genTable.setColumnList(genTableColumnDao.findList(genTableColumn));
 		return genTable;
 	}
+
+    public GenTable getByName(String name) {
+        GenTable genTable = genTableDao.get(name);
+
+        return genTable;
+    }
+
 	
 	public Page<GenTable> find(Page<GenTable> page, GenTable genTable) {
 		genTable.setPage(page);
