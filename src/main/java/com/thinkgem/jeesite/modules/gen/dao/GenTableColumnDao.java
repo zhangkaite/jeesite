@@ -7,6 +7,8 @@ import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.gen.entity.GenTableColumn;
 
+import java.util.Map;
+
 /**
  * 业务表字段DAO接口
  * @author ThinkGem
@@ -16,4 +18,6 @@ import com.thinkgem.jeesite.modules.gen.entity.GenTableColumn;
 public interface GenTableColumnDao extends CrudDao<GenTableColumn> {
 	
 	public void deleteByGenTableId(String genTableId);
+
+    public void alterTable(Map map);
 }
