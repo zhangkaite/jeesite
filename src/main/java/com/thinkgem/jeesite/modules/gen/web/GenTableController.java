@@ -3,11 +3,15 @@
  */
 package com.thinkgem.jeesite.modules.gen.web;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.thinkgem.jeesite.modules.sys.entity.Dict;
+import com.thinkgem.jeesite.modules.sys.service.DictService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +42,8 @@ public class GenTableController extends BaseController {
 
     @Autowired
     private GenTableService genTableService;
+    @Autowired
+    private DictService dictService;
 
     @ModelAttribute
     public GenTable get(@RequestParam(required = false) String id) {
@@ -118,5 +124,53 @@ public class GenTableController extends BaseController {
         addMessage(redirectAttributes, "删除业务表成功");
         return "redirect:" + adminPath + "/gen/genTable/?repage";
     }
+
+    /**
+     * 加载选择业务表页面
+     * @return
+     */
+
+    @RequiresPermissions("gen:genTable:view")
+    @RequestMapping(value = {"genBusTable"})
+    public String genBusTable( Model model) {
+        List<GenTable> tableList = genTableService.findTableListFormDb(new GenTable());
+        model.addAttribute("tableList", tableList);
+        return "modules/gen/genBusTable";
+    }
+
+
+    @RequiresPermissions("gen:genTable:view")
+    @RequestMapping(value = "showBusTable")
+    public String showBusTable(GenTable genTable, Model model) {
+        genTable = genTableService.getByName(genTable.getName());
+        if (null != genTable.getId()) {
+            genTable = genTableService.get(genTable.getId());
+        }
+        model.addAttribute("genTable", genTable);
+        Dict dict = new Dict();
+        dict.setType("bus_table_type");
+        List<Dict> dictList= dictService.findList(dict);
+        Map map=new HashMap();
+        for (Dict entity:dictList){
+            map.put(entity.getType()+"_"+entity.getValue(),entity.getLabel());
+        }
+        model.addAttribute("dictList", map);
+        model.addAttribute("config", GenUtils.getConfig());
+        return "modules/gen/genBusTableInfo";
+    }
+
+    //busTableSave
+    @RequiresPermissions("gen:genTable:view")
+    @RequestMapping(value = "busTableSave")
+    public void busTableSave(GenTable genTable,  RedirectAttributes redirectAttributes) {
+       //将数据保存到业务字段选择表中
+
+
+        genTableService.save(genTable);
+        //修改业务表表结构
+
+        addMessage(redirectAttributes, "保存业务表'" + genTable.getName() + "'成功");
+    }
+
 
 }

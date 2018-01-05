@@ -24,8 +24,17 @@ public class GenTable extends DataEntity<GenTable> {
 	private String className;		// 实体类名称
 	private String parentTable;		// 关联父表
 	private String parentTableFk;		// 关联父表外键
+    private String busTableType;    //表业务类型
 
-	private List<GenTableColumn> columnList = Lists.newArrayList();	// 表列
+    public String getBusTableType() {
+        return busTableType;
+    }
+
+    public void setBusTableType(String busTableType) {
+        this.busTableType = busTableType;
+    }
+
+    private List<GenTableColumn> columnList = Lists.newArrayList();	// 表列
 
 	private String nameLike; 	// 按名称模糊查询
 	

@@ -5,19 +5,20 @@ package com.thinkgem.jeesite.modules.gen.dao;
 
 import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
-import com.thinkgem.jeesite.modules.gen.entity.GenTable;
+import com.thinkgem.jeesite.modules.gen.entity.GenBusTable;
+import com.thinkgem.jeesite.modules.gen.entity.GenTableColumn;
 
 import java.util.Map;
 
 /**
- * 业务表DAO接口
- *
+ * 业务表字段DAO接口
  * @author ThinkGem
  * @version 2013-10-15
  */
 @MyBatisDao
-public interface GenTableDao extends CrudDao<GenTable> {
+public interface GenBusTableDao extends CrudDao<GenBusTable> {
 
+    public void deleteBusTableData(Map map);
 
-
+    public void inssertBusTableData(Map map);
 }

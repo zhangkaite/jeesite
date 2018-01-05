@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.thinkgem.jeesite.modules.gen.dao.GenBusTableDao">
+
+
+  <delete id="deleteBusTableData" >
+
+      delete from gen_bus_table where bus_type=${busTableType}
+  </delete>
+
+    <insert id="inssertBusTableData" parameterType="java.util.HashMap" statementType="STATEMENT">
+        INSERT INTO gen_bus_table(table_id,column_id,bus_type,sort)
+        values(${tableId},${columnId},${busType},${sort})
+
+    </insert>
+
+
+</mapper>

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.thinkgem.jeesite.modules.gen.dao.GenBusTableDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,8 @@ public class GenTableService extends BaseService {
     private GenTableColumnDao genTableColumnDao;
     @Autowired
     private GenDataBaseDictDao genDataBaseDictDao;
+    @Autowired
+    private GenBusTableDao genBusTableDao;
 
     public GenTable get(String id) {
         GenTable genTable = genTableDao.get(id);
@@ -172,7 +175,7 @@ public class GenTableService extends BaseService {
                 String columnName=column.getName();
                 String jdbcType=column.getJdbcType();
                 String comments=column.getComments();
-                String sql="alter table '"+tableName+"' add  column '"+columnName+"' "+jdbcType +" COMMENT " +
+                String sql="alter table "+tableName+" add  column "+columnName+" "+jdbcType +" COMMENT " +
                         "'"+comments+"'";
                 if (column.getIsPk().equals("1")){
                     sql+=",add primary key ("+tableName+")";
@@ -192,7 +195,7 @@ public class GenTableService extends BaseService {
                 String sql="";
                 if (column.getDelFlag().equals("1")){//列的删除
                     //ALTER TABLE `entity_exercise` DROP COLUMN `type`,
-                     sql="alter table '"+tableName+"' DROP  COLUMN '"+columnName+"' "+jdbcType;
+                     sql="alter table "+tableName+" DROP  COLUMN "+columnName;
                 }else{//列的更新
                     // alter table user MODIFY new1 VARCHAR(10); 　//修改一个字段的类型
                     sql="alter table "+tableName+" MODIFY "+columnName+" "+jdbcType;
@@ -208,6 +211,17 @@ public class GenTableService extends BaseService {
     public void delete(GenTable genTable) {
         genTableDao.delete(genTable);
         genTableColumnDao.deleteByGenTableId(genTable.getId());
+    }
+
+    @Transactional
+    public void saveBusTableData(GenTable genTable){
+
+
+
+        //保存之前先删除之前的数据然后保存数据
+
+
+
     }
 
 }

@@ -20,4 +20,6 @@ public interface GenTableColumnDao extends CrudDao<GenTableColumn> {
 	public void deleteByGenTableId(String genTableId);
 
     public void alterTable(Map map);
+
+
 }
