@@ -3,11 +3,13 @@
  */
 package com.thinkgem.jeesite.modules.gen.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.thinkgem.jeesite.modules.gen.dao.GenBusTableDao;
+import com.thinkgem.jeesite.modules.gen.entity.GenBusTable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -196,10 +198,10 @@ public class GenTableService extends BaseService {
                 if (column.getDelFlag().equals("1")){//列的删除
                     //ALTER TABLE `entity_exercise` DROP COLUMN `type`,
                      sql="alter table "+tableName+" DROP  COLUMN "+columnName;
-                }else{//列的更新
+                }/*else{//列的更新
                     // alter table user MODIFY new1 VARCHAR(10); 　//修改一个字段的类型
                     sql="alter table "+tableName+" MODIFY "+columnName+" "+jdbcType;
-                }
+                }*/
                 logger.info("update modify table struct sql:"+sql);
                 map.put("sql",sql);
                 genTableColumnDao.alterTable( map);
@@ -215,12 +217,24 @@ public class GenTableService extends BaseService {
 
     @Transactional
     public void saveBusTableData(GenTable genTable){
-
-
-
         //保存之前先删除之前的数据然后保存数据
-
-
+        String busTableType=genTable.getBusTableType();
+        Map delMap=new HashMap();
+        delMap.put("busTableType",busTableType);
+        genBusTableDao.deleteBusTableData(delMap);
+        List<GenBusTable> busTableList=new ArrayList<GenBusTable>();
+         String tableId=genTable.getId();
+        for (GenTableColumn column : genTable.getColumnList()) {
+            String columnId=column.getId();
+            int sort=column.getSort();
+            GenBusTable genBusTable=new GenBusTable();
+            genBusTable.setBusType(busTableType);
+            genBusTable.setColumnId(columnId);
+            genBusTable.setTableId(tableId);
+            genBusTable.setSort(sort);
+            busTableList.add(genBusTable);
+        }
+        genBusTableDao.insertBusTableData(busTableList);
 
     }
 

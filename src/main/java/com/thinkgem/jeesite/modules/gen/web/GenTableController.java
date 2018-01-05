@@ -3,15 +3,16 @@
  */
 package com.thinkgem.jeesite.modules.gen.web;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.thinkgem.jeesite.common.persistence.Page;
+import com.thinkgem.jeesite.common.utils.StringUtils;
+import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.gen.entity.GenTable;
+import com.thinkgem.jeesite.modules.gen.service.GenTableService;
+import com.thinkgem.jeesite.modules.gen.util.GenUtils;
 import com.thinkgem.jeesite.modules.sys.entity.Dict;
+import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.service.DictService;
+import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,14 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.thinkgem.jeesite.common.persistence.Page;
-import com.thinkgem.jeesite.common.utils.StringUtils;
-import com.thinkgem.jeesite.common.web.BaseController;
-import com.thinkgem.jeesite.modules.sys.entity.User;
-import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
-import com.thinkgem.jeesite.modules.gen.entity.GenTable;
-import com.thinkgem.jeesite.modules.gen.service.GenTableService;
-import com.thinkgem.jeesite.modules.gen.util.GenUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 业务表Controller
@@ -159,16 +157,10 @@ public class GenTableController extends BaseController {
         return "modules/gen/genBusTableInfo";
     }
 
-    //busTableSave
     @RequiresPermissions("gen:genTable:view")
     @RequestMapping(value = "busTableSave")
     public void busTableSave(GenTable genTable,  RedirectAttributes redirectAttributes) {
-       //将数据保存到业务字段选择表中
-
-
-        genTableService.save(genTable);
-        //修改业务表表结构
-
+        genTableService.saveBusTableData(genTable);
         addMessage(redirectAttributes, "保存业务表'" + genTable.getName() + "'成功");
     }
 

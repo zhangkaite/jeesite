@@ -8,6 +8,7 @@ import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.gen.entity.GenBusTable;
 import com.thinkgem.jeesite.modules.gen.entity.GenTableColumn;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,5 +21,5 @@ public interface GenBusTableDao extends CrudDao<GenBusTable> {
 
     public void deleteBusTableData(Map map);
 
-    public void inssertBusTableData(Map map);
+    public void insertBusTableData(List<GenBusTable> list);
 }
