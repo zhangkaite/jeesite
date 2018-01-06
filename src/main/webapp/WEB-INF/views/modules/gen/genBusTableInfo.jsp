@@ -6,32 +6,12 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#comments").focus();
-            $("#inputForm").validate({
-                submitHandler: function (form) {
-                    loading('正在提交，请稍等...');
-                    $("input[type=checkbox]").each(function () {
-                        $(this).after("<input type=\"hidden\" name=\"" + $(this).attr("name") + "\" value=\""
-                                + ($(this).attr("checked") ? "1" : "0") + "\"/>");
-                        $(this).attr("name", "_" + $(this).attr("name"));
-                    });
-                    form.submit();
-                },
-                errorContainer: "#messageBox",
-                errorPlacement: function (error, element) {
-                    $("#messageBox").text("输入有误，请先更正。");
-                    if (element.is(":checkbox") || element.is(":radio") || element.parent().is(".input-append")) {
-                        error.appendTo(element.parent().parent());
-                    } else {
-                        error.insertAfter(element);
-                    }
-                }
-            });
 
             $("#checkedAll").click(function () {
                 if ($(this).attr("checked") == 'checked') { // 全选
                     $("input[name*='checkbox_name']").each(function () {
                         $(this).attr("checked", true);
+
                     });
                 } else { // 取消全选
                     $("input[name*='checkbox_name']").each(function () {
@@ -42,19 +22,21 @@
         });
 
 
-        function delSelectTr() {
-            var i = 0;
+        function saveSelectData(){
+           var i=0;
             $("input[name*='checkbox_name']").each(function () {
                 if ($(this).attr("checked") == 'checked') {
-                    // columnList[${vs.index}].delFlag
-                    $("input[name='columnList[" + i + "].delFlag']").val(1);
-                    $(this).parent().parent().hide();
-                    //$(this).parent().parent().remove();
+                    $("input[name='columnList["+i+"].isList']").val(1);
                 }
                 i++;
             });
+            $("#inputForm").submit();
 
         }
+
+
+
+
 
 
     </script>
@@ -83,7 +65,7 @@
         <div class="control-group">
             <label class="control-label">业务类型:</label>
             <div class="controls">
-                <form:select path="busTableType" cssClass="input-xlarge">
+                <form:select path="busTableType" cssClass="input-xlarge" id="busTableType">
                     <form:option value="">无</form:option>
                     <form:options items="${dictList}" htmlEscape="false"/>
                 </form:select>
@@ -120,8 +102,8 @@
                         </td>
                         <td nowrap>
                             <input type="hidden" name="columnList[${vs.index}].id" value="${column.id}"/>
-                            <input type="hidden" name="columnList[${vs.index}].delFlag"
-                                   value="${column.delFlag}"/>
+                            <input type="hidden" name="columnList[${vs.index}].isList"
+                                   value="0"/>
                             <input type="hidden" name="columnList[${vs.index}].genTable.id"
                                    value="${column.genTable.id}"/>
                                 ${column.name}
@@ -155,7 +137,7 @@
                                 ${column.dictType}
                         </td>
                         <td>
-                            <input type="text" name="columnList[${vs.index}].sort" value="${column.sort}"
+                            <input type="text" name="columnList[${vs.index}].sort" value=""
                                    maxlength="200" class="required input-min digits"/>
                         </td>
                     </tr>
@@ -167,7 +149,7 @@
     </fieldset>
     <div class="form-actions">
         <shiro:hasPermission name="gen:genTable:edit"><input id="btnSubmit" class="btn btn-primary"
-                                                             type="submit"
+                                                             type="button" onclick="saveSelectData()"
                                                              value="保 存"/>&nbsp;</shiro:hasPermission>
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>

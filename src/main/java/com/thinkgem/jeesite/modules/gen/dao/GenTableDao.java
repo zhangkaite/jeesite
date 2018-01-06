@@ -7,6 +7,7 @@ import com.thinkgem.jeesite.common.persistence.CrudDao;
 import com.thinkgem.jeesite.common.persistence.annotation.MyBatisDao;
 import com.thinkgem.jeesite.modules.gen.entity.GenTable;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +20,6 @@ import java.util.Map;
 public interface GenTableDao extends CrudDao<GenTable> {
 
 
+    List<GenTable> findDataList();
 
 }

@@ -12,6 +12,11 @@
     </script>
 </head>
 <body>
+<ul class="nav nav-tabs">
+    <li ><a href="${ctx}/gen/genTable/genBusTableList">业务字段表列表</a></li>
+    <li class="active"><a href="${ctx}/gen/genTable/genBusTable">业务表字段管理</a></li>
+
+</ul>
 <form:form id="inputForm" modelAttribute="genTable" action="${ctx}/gen/genTable/showBusTable" method="post"
            class="form-horizontal">
     <form:hidden path="id"/>

@@ -78,6 +78,10 @@ public class GenTableService extends BaseService {
         return genDataBaseDictDao.findTableList(genTable);
     }
 
+
+    public List<GenTable> findGenTableList() {
+        return  genTableDao.findDataList();
+    }
     /**
      * 验证表名是否可用，如果已存在，则返回false
      *
@@ -172,39 +176,39 @@ public class GenTableService extends BaseService {
                 genTableColumnDao.insert(column);
                 //alter table l_extend_user add `user_register_type` tinyint(4) DEFAULT '0' COMMENT '用户开放注册类型 ，
                 // 目前教师空间有两种注册类型做下区分 ：0走区域码的逻辑，1非区域码逻辑';
-          //组装修改表结构的sql语句
-                String tableName=genTable.getName();
-                String columnName=column.getName();
-                String jdbcType=column.getJdbcType();
-                String comments=column.getComments();
-                String sql="alter table "+tableName+" add  column "+columnName+" "+jdbcType +" COMMENT " +
-                        "'"+comments+"'";
-                if (column.getIsPk().equals("1")){
-                    sql+=",add primary key ("+tableName+")";
-                }
-                logger.info("inser modify table struct sql:"+sql);
-                Map<String,String> map=new HashMap<String,String>();
-                map.put("sql",sql);
-                genTableColumnDao.alterTable( map);
+                //组装修改表结构的sql语句
+                String tableName = genTable.getName();
+                String columnName = column.getName();
+                String jdbcType = column.getJdbcType();
+                String comments = column.getComments();
+                String sql = "alter table " + tableName + " add  column " + columnName + " " + jdbcType + " COMMENT "
+                        + "'" + comments + "'";
+                logger.info("inser modify table struct sql:" + sql);
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("sql", sql);
+                genTableColumnDao.alterTable(map);
             } else {
                 column.preUpdate();
                 genTableColumnDao.update(column);
-                String tableName=genTable.getName();
-                String columnName=column.getName();
-                String jdbcType=column.getJdbcType();
-               // String comments=column.getComments();
-                Map<String,String> map=new HashMap<String,String>();
-                String sql="";
-                if (column.getDelFlag().equals("1")){//列的删除
+                String tableName = genTable.getName();
+                String columnName = column.getName();
+                String jdbcType = column.getJdbcType();
+                // String comments=column.getComments();
+                Map<String, String> map = new HashMap<String, String>();
+                String sql = "";
+                if (column.getDelFlag().equals("1")) {//列的删除
                     //ALTER TABLE `entity_exercise` DROP COLUMN `type`,
-                     sql="alter table "+tableName+" DROP  COLUMN "+columnName;
+                    sql = "alter table " + tableName + " DROP  COLUMN " + columnName;
                 }/*else{//列的更新
                     // alter table user MODIFY new1 VARCHAR(10); 　//修改一个字段的类型
                     sql="alter table "+tableName+" MODIFY "+columnName+" "+jdbcType;
                 }*/
-                logger.info("update modify table struct sql:"+sql);
-                map.put("sql",sql);
-                genTableColumnDao.alterTable( map);
+                if (StringUtils.isNotEmpty(sql)){
+                    logger.info("update modify table struct sql:" + sql);
+                    map.put("sql", sql);
+                    genTableColumnDao.alterTable(map);
+                }
+
             }
         }
     }
@@ -216,26 +220,40 @@ public class GenTableService extends BaseService {
     }
 
     @Transactional
-    public void saveBusTableData(GenTable genTable){
+    public void saveBusTableData(GenTable genTable) {
         //保存之前先删除之前的数据然后保存数据
-        String busTableType=genTable.getBusTableType();
-        Map delMap=new HashMap();
-        delMap.put("busTableType",busTableType);
+        String busTableType = genTable.getBusTableType();
+        Map delMap = new HashMap();
+        delMap.put("busTableType", busTableType);
         genBusTableDao.deleteBusTableData(delMap);
-        List<GenBusTable> busTableList=new ArrayList<GenBusTable>();
-         String tableId=genTable.getId();
+        List<GenBusTable> busTableList = new ArrayList<GenBusTable>();
+        String tableId = genTable.getId();
         for (GenTableColumn column : genTable.getColumnList()) {
-            String columnId=column.getId();
-            int sort=column.getSort();
-            GenBusTable genBusTable=new GenBusTable();
-            genBusTable.setBusType(busTableType);
-            genBusTable.setColumnId(columnId);
-            genBusTable.setTableId(tableId);
-            genBusTable.setSort(sort);
-            busTableList.add(genBusTable);
+            if (column.getIsList().equals("1")) {
+                String columnId = column.getId();
+                int sort = column.getSort();
+                GenBusTable genBusTable = new GenBusTable();
+                genBusTable.setBusType(busTableType);
+                genBusTable.setColumnId(columnId);
+                genBusTable.setTableId(tableId);
+                genBusTable.setSort(sort);
+                busTableList.add(genBusTable);
+            }
+
         }
         genBusTableDao.insertBusTableData(busTableList);
 
     }
+
+
+
+    public Page<GenBusTable> genBusTableList(Page<GenBusTable> page, GenBusTable genBusTable) {
+        genBusTable.setPage(page);
+        List<GenBusTable> resultList = genBusTableDao.getBusTableList(genBusTable);
+        page.setList(resultList);
+        return page;
+    }
+
+
 
 }

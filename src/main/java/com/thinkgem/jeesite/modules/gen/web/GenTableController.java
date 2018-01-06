@@ -6,6 +6,7 @@ package com.thinkgem.jeesite.modules.gen.web;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
+import com.thinkgem.jeesite.modules.gen.entity.GenBusTable;
 import com.thinkgem.jeesite.modules.gen.entity.GenTable;
 import com.thinkgem.jeesite.modules.gen.service.GenTableService;
 import com.thinkgem.jeesite.modules.gen.util.GenUtils;
@@ -20,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,16 +86,19 @@ public class GenTableController extends BaseController {
         // 获取物理表列表
         List<GenTable> tableList = genTableService.findTableListFormDb(new GenTable());
         model.addAttribute("tableList", tableList);
-
+       String name=genTable.getName();
         genTable = genTableService.getByName(genTable.getName());
-        if (null != genTable.getId()) {
+        if (null != genTable) {
             genTable = genTableService.get(genTable.getId());
+        } else {
+            genTable=new GenTable();
+            genTable.setName(name);
+            genTable = genTableService.getTableFormDb(genTable);
         }
         model.addAttribute("genTable", genTable);
         model.addAttribute("config", GenUtils.getConfig());
         return "modules/gen/genTableForm";
     }
-
 
 
     @RequiresPermissions("gen:genTable:edit")
@@ -103,11 +108,11 @@ public class GenTableController extends BaseController {
             return form(genTable, model);
         }
         // 验证表是否已经存在
-        if (StringUtils.isBlank(genTable.getId()) && !genTableService.checkTableName(genTable.getName())) {
+        /*if (StringUtils.isBlank(genTable.getId()) && !genTableService.checkTableName(genTable.getName())) {
             addMessage(model, "保存失败！" + genTable.getName() + " 表已经存在！");
             genTable.setName("");
             return form(genTable, model);
-        }
+        }*/
         genTableService.save(genTable);
         //修改业务表表结构
 
@@ -125,13 +130,14 @@ public class GenTableController extends BaseController {
 
     /**
      * 加载选择业务表页面
+     *
      * @return
      */
 
     @RequiresPermissions("gen:genTable:view")
     @RequestMapping(value = {"genBusTable"})
-    public String genBusTable( Model model) {
-        List<GenTable> tableList = genTableService.findTableListFormDb(new GenTable());
+    public String genBusTable(Model model) {
+        List<GenTable> tableList = genTableService.findGenTableList();
         model.addAttribute("tableList", tableList);
         return "modules/gen/genBusTable";
     }
@@ -146,22 +152,45 @@ public class GenTableController extends BaseController {
         }
         model.addAttribute("genTable", genTable);
         Dict dict = new Dict();
-        dict.setType("bus_table_type");
-        List<Dict> dictList= dictService.findList(dict);
-        Map map=new HashMap();
-        for (Dict entity:dictList){
-            map.put(entity.getType()+"_"+entity.getValue(),entity.getLabel());
+        dict.setType("theme");
+        List<Dict> dictList = dictService.findList(dict);
+        Map map = new HashMap();
+        for (Dict entity : dictList) {
+            map.put(entity.getLabel(), entity.getLabel());
         }
         model.addAttribute("dictList", map);
         model.addAttribute("config", GenUtils.getConfig());
         return "modules/gen/genBusTableInfo";
     }
 
-    @RequiresPermissions("gen:genTable:view")
+
     @RequestMapping(value = "busTableSave")
-    public void busTableSave(GenTable genTable,  RedirectAttributes redirectAttributes) {
+    //@ResponseBody
+    public String busTableSave(GenTable genTable, RedirectAttributes redirectAttributes) {
         genTableService.saveBusTableData(genTable);
-        addMessage(redirectAttributes, "保存业务表'" + genTable.getName() + "'成功");
+        addMessage(redirectAttributes, "删除业务表成功");
+        return "redirect:" + adminPath + "/gen/genTable/genBusTableList";
+    }
+
+
+    @RequiresPermissions("gen:genTable:view")
+    @RequestMapping(value = "genBusTableList")
+    public String genBusTableList(GenBusTable genBusTable, HttpServletRequest request, HttpServletResponse response,
+                                  Model model) {
+        //查询业务表字段选择结果列表
+        Dict dict = new Dict();
+        dict.setType("theme");
+        List<Dict> dictList = dictService.findList(dict);
+        Map map = new HashMap();
+        for (Dict entity : dictList) {
+            map.put(entity.getLabel(), entity.getLabel());
+        }
+        model.addAttribute("dictList", map);
+        Page<GenBusTable> page = genTableService.genBusTableList(new Page<GenBusTable>(request, response), genBusTable);
+        model.addAttribute("page", page);
+        return "modules/gen/genBusTableList";
+
+
     }
 
 

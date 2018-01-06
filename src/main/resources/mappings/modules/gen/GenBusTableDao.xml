@@ -4,7 +4,7 @@
 
 
     <delete id="deleteBusTableData">
-      delete from gen_bus_table where bus_type=${busTableType}
+      delete from gen_bus_table where bus_type='${busTableType}'
   </delete>
 
     <insert id="insertBusTableData" parameterType="java.util.List" statementType="STATEMENT">
@@ -12,9 +12,19 @@
         values
         <foreach collection="list" item="item" index="index"
                  separator=",">
-            (${item.tableId}},${item.columnId},${item.busType},${item.sort})
+            ('${item.tableId}','${item.columnId}','${item.busType}',${item.sort})
         </foreach>
     </insert>
+
+    <select id="getBusTableList"  resultType="com.thinkgem.jeesite.modules.gen.entity.GenBusTable">
+        SELECT a.name as columnName,a.`comments` as columnComments,a.`jdbc_type` as columnJdbcType, b.id AS id,
+        b.name AS tableName, b.comments AS tableComments,c.`sort`,c.bus_type as busType FROM gen_table_column a ,
+        gen_table b,`gen_bus_table` c where b.id = a.gen_table_id and c.`column_id`=a.id
+        <if test="busType != null and busType != ''">
+          and c.bus_type=#{busType}
+        </if>
+        ORDER BY c.sort ASC
+    </select>
 
 
 </mapper>

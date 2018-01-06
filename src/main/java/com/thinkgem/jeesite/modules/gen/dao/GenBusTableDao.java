@@ -22,4 +22,7 @@ public interface GenBusTableDao extends CrudDao<GenBusTable> {
     public void deleteBusTableData(Map map);
 
     public void insertBusTableData(List<GenBusTable> list);
+
+    public List<GenBusTable> getBusTableList(GenBusTable genBusTable);
+
 }
