@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.gen.web;
 
+import com.thinkgem.jeesite.common.mapper.JsonMapper;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
@@ -168,7 +169,7 @@ public class GenTableController extends BaseController {
     //@ResponseBody
     public String busTableSave(GenTable genTable, RedirectAttributes redirectAttributes) {
         genTableService.saveBusTableData(genTable);
-        addMessage(redirectAttributes, "删除业务表成功");
+        addMessage(redirectAttributes, "业务表字段添加成功");
         return "redirect:" + adminPath + "/gen/genTable/genBusTableList";
     }
 
@@ -192,6 +193,24 @@ public class GenTableController extends BaseController {
 
 
     }
+
+
+    @RequestMapping(value = "getSelectColumnData")
+    @ResponseBody
+    public void getSelectColumnData(String busTableType,HttpServletResponse response){
+
+        List<GenBusTable> dataList=genTableService.getSelectColumnList(busTableType);
+        renderString(response, JsonMapper.toJsonString(dataList),"text/html");
+       /* try {
+            ResponseUtil.writeJson("getSelectColumnData",dataList,response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+
+    }
+
+
+
 
 
 }

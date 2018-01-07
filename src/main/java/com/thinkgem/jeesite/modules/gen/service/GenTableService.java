@@ -254,6 +254,13 @@ public class GenTableService extends BaseService {
         return page;
     }
 
+    public List<GenBusTable> getSelectColumnList(String busType){
+        GenBusTable param=new GenBusTable();
+        param.setBusType(busType);
+        List<GenBusTable> list=genBusTableDao.findList(param);
+        return list;
+
+    }
 
 
 }

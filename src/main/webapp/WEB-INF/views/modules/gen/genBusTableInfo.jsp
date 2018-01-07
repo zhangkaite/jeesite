@@ -35,6 +35,43 @@
         }
 
 
+        function showSelectedData(){
+            var s=0;
+            $("input[name*='checkbox_name']").each(function () {
+                $(this).attr("checked", false);
+                $("input[name='columnList["+s+"].sort']").val('');
+                s++;
+            });
+            var busTableType=$("#busTableType").val();
+            $.ajax({
+                type:'post',
+                url:'${ctx}/gen/genTable/getSelectColumnData',
+                data:{'busTableType':busTableType},
+                cache:false,
+                dataType:'json',
+                success:function(data){
+                    // [{"id":"13","isNewRecord":false,"busType":"橙色主题","columnId":"9f678abbea784853a3a26f084bd059f4","tableId":"3ffbe7a53ea54fe8a33181b0174c5359","sort":1},{"id":"14","isNewRecord":false,"busType":"橙色主题","columnId":"ea0afdee98204cfabbec2164e0cf4b45","tableId":"3ffbe7a53ea54fe8a33181b0174c5359","sort":2}]
+                    if (data != null && data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                           // alert(data[i].columnId);
+                            var j=0;
+                            $("input[name*='checkbox_name']").each(function () {
+                                if($("input[name='columnList["+j+"].id']").val()==data[i].columnId){
+                                    //$(this).attr("checked", true);
+                                    $("input[name='checkbox_name["+j+"]'").attr("checked", true);
+                                    $("input[name='columnList["+j+"].sort'").val(data[i].sort);
+                                    return true;
+                                }
+
+                                j++;
+                            });
+
+                        }
+                    }
+                }
+            });
+
+        }
 
 
 
@@ -65,7 +102,7 @@
         <div class="control-group">
             <label class="control-label">业务类型:</label>
             <div class="controls">
-                <form:select path="busTableType" cssClass="input-xlarge" id="busTableType">
+                <form:select path="busTableType" cssClass="input-xlarge" id="busTableType" onchange="showSelectedData()">
                     <form:option value="">无</form:option>
                     <form:options items="${dictList}" htmlEscape="false"/>
                 </form:select>

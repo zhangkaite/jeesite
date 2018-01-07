@@ -26,5 +26,11 @@
         ORDER BY c.sort ASC
     </select>
 
+    <select id="findList" resultType="com.thinkgem.jeesite.modules.gen.entity.GenBusTable">
+
+        select id,table_id as tableId,column_id as columnId,bus_type as busType,sort from gen_bus_table
+        where bus_type=#{busType}
+    </select>
+
 
 </mapper>

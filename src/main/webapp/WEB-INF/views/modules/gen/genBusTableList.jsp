@@ -5,9 +5,6 @@
     <title>业务表管理</title>
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
-        $(document).ready(function () {
-
-        });
         function page(n, s) {
             if (n) $("#pageNo").val(n);
             if (s) $("#pageSize").val(s);
@@ -28,7 +25,7 @@
     <input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
     <input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
     <sys:tableSort id="orderBy" name="orderBy" value="${page.orderBy}" callback="page();"/>
-    <label>表名：</label>
+    <label>业务类型：</label>
     <form:select path="busType" cssClass="input-xlarge" id="busTableType">
         <form:option value="">无</form:option>
         <form:options items="${dictList}" htmlEscape="false"/>
@@ -41,7 +38,7 @@
     <thead>
     <tr>
         <th class="sort-column name">表名</th>
-        <th>表描述</th>
+        <th class="sort-column name">表描述</th>
         <th class="sort-column class_name">业务类型</th>
         <th class="sort-column name">列名</th>
         <th class="sort-column name">列名描述</th>
