@@ -1360,3 +1360,16 @@ CREATE TABLE `test_tree` (
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+
+
+DROP TABLE IF EXISTS `gen_bus_table`;
+
+CREATE TABLE `gen_bus_table` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `table_id` varchar(36) COLLATE utf8_bin DEFAULT NULL COMMENT '表ID',
+  `column_id` varchar(36) COLLATE utf8_bin DEFAULT NULL COMMENT '表列字段ID',
+  `bus_type` varchar(20) COLLATE utf8_bin DEFAULT NULL COMMENT '业务类型',
+  `sort` int(11) DEFAULT NULL COMMENT '排序',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
