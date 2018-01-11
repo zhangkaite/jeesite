@@ -6,6 +6,26 @@
     <meta name="decorator" content="default"/>
     <script type="text/javascript">
         $(document).ready(function () {
+            $("#inputForm").validate({
+                submitHandler: function (form) {
+                    loading('正在提交，请稍等...');
+                    $("input[type=checkbox]").each(function () {
+                        $(this).after("<input type=\"hidden\" name=\"" + $(this).attr("name") + "\" value=\""
+                                + ($(this).attr("checked") ? "1" : "0") + "\"/>");
+                        $(this).attr("name", "_" + $(this).attr("name"));
+                    });
+                    form.submit();
+                },
+                errorContainer: "#messageBox",
+                errorPlacement: function (error, element) {
+                    $("#messageBox").text("输入有误，请先更正。");
+                    if (element.is(":checkbox") || element.is(":radio") || element.parent().is(".input-append")) {
+                        error.appendTo(element.parent().parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
 
             $("#checkedAll").click(function () {
                 if ($(this).attr("checked") == 'checked') { // 全选
@@ -19,17 +39,39 @@
                     });
                 }
             });
+            $("input[name*='checkbox_name']").click(function(){
+
+                $("label[name='errorMesg']").hide();
+
+            });
+
+            showSelectedData();
         });
 
 
         function saveSelectData(){
            var i=0;
+            var j=0;
             $("input[name*='checkbox_name']").each(function () {
                 if ($(this).attr("checked") == 'checked') {
                     $("input[name='columnList["+i+"].isList']").val(1);
+                    j++;
                 }
                 i++;
             });
+
+            if(j==0){
+
+                $("input[name*='checkbox_name']").each(function () {
+                    $(this).after("<label name='errorMesg' class='error'>请勾选数据</label>");
+                    //$(this).attr("name", "_" + $(this).attr("name"));
+                });
+               /* setTimeout(function(){
+                    $("input[name='errorMesg']").hide();//找到对应的标签隐藏
+                },3000);*/
+                return;
+            }
+
             $("#inputForm").submit();
 
         }
@@ -39,7 +81,7 @@
             var s=0;
             $("input[name*='checkbox_name']").each(function () {
                 $(this).attr("checked", false);
-                $("input[name='columnList["+s+"].sort']").val('');
+                $("input[name='columnList["+s+"].sort']").val('0');
                 s++;
             });
             var busTableType=$("#busTableType").val();
@@ -103,7 +145,7 @@
             <label class="control-label">业务类型:</label>
             <div class="controls">
                 <form:select path="busTableType" cssClass="input-xlarge" id="busTableType" onchange="showSelectedData()">
-                    <form:option value="">无</form:option>
+                    <%--<form:option value="">无</form:option>--%>
                     <form:options items="${dictList}" htmlEscape="false"/>
                 </form:select>
 
