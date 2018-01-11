@@ -181,12 +181,15 @@ public class GenTableService extends BaseService {
                 String columnName = column.getName();
                 String jdbcType = column.getJdbcType();
                 String comments = column.getComments();
-                String sql = "alter table " + tableName + " add  column " + columnName + " " + jdbcType + " COMMENT "
-                        + "'" + comments + "'";
-                logger.info("inser modify table struct sql:" + sql);
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("sql", sql);
-                genTableColumnDao.alterTable(map);
+                if (StringUtils.isNotEmpty(columnName)){
+                    String sql = "alter table " + tableName + " add  column " + columnName + " " + jdbcType + " COMMENT "
+                            + "'" + comments + "'";
+                    logger.info("inser modify table struct sql:" + sql);
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("sql", sql);
+                    genTableColumnDao.alterTable(map);
+                }
+
             } else {
                 column.preUpdate();
                 genTableColumnDao.update(column);
